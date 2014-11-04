@@ -1,5 +1,5 @@
 #![license = "MIT"]
-#![deny(missing_doc)]
+#![deny(missing_docs)]
 #![deny(warnings)]
 
 //! A variant of the Acceptor trait which moves self in the `move_incoming` method.
