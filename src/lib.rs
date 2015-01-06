@@ -1,6 +1,8 @@
+#![allow(unused_attributes)]
 #![license = "MIT"]
 #![deny(missing_docs)]
 #![deny(warnings)]
+#![feature(associated_types)]
 
 //! A variant of the Acceptor trait which moves self in the `move_incoming` method.
 //!
@@ -9,7 +11,7 @@
 use std::io::{Acceptor, IoResult};
 
 /// A variant of the Acceptor trait which moves self in the `move_incoming` method.
-pub trait MoveAcceptor<T>: Acceptor<T> {
+pub trait MoveAcceptor<T>: Acceptor<T> + Sized {
     /// Wait for and accept an incoming connection.
     fn maccept(&mut self) -> IoResult<T> { self.accept() }
 
@@ -24,7 +26,8 @@ pub struct MoveConnections<T> {
     underlying: T
 }
 
-impl<T, A: Acceptor<T>> Iterator<IoResult<T>> for MoveConnections<A> {
+impl<T, A: Acceptor<T>> Iterator for MoveConnections<A> {
+    type Item = IoResult<T>;
     fn next(&mut self) -> Option<IoResult<T>> {
         Some(self.underlying.accept())
     }
